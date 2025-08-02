@@ -1,0 +1,38 @@
+templates:
+  # A ConfigMap example
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: example-config
+      labels:
+        app: example
+        environment: "{{ .Values.environment }}"
+    data:
+      config.json: |
+        {
+          "apiUrl": "{{ .Values.apiUrl }}",
+          "maxRetries": {{ .Values.maxRetries }},
+          "features": {{ .Values.features | toJson }}
+        }
+
+  # A Service example
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: example-service
+    spec:
+      selector:
+        app: example
+      ports:
+        - port: 80
+          targetPort: {{ .Values.servicePort }}
+
+# Values that will be referenced in the templates
+environment: development
+apiUrl: https://api.example.com
+maxRetries: 3
+servicePort: 8080
+features:
+  logging: true
+  metrics: false
+  tracing: true

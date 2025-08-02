@@ -1,0 +1,85 @@
+name: Release Helm Chart
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  CHART_PATH: raw
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.2.2
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v4.3.0
+
+    - name: Extract chart version
+      id: chart_version
+      run: |
+        VERSION=$(grep '^version:' ${{ env.CHART_PATH }}/Chart.yaml | cut -d' ' -f2 | tr -d '"'"'"'')
+        CHART_NAME=$(grep '^name:' ${{ env.CHART_PATH }}/Chart.yaml | cut -d' ' -f2 | tr -d '"'"'"'')
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "chart_name=${CHART_NAME}" >> $GITHUB_OUTPUT
+        echo "Chart: ${CHART_NAME}, Version: ${VERSION}"
+
+    - name: Check if tag exists and fail if it does
+      run: |
+        VERSION="${{ steps.chart_version.outputs.version }}"
+        if git rev-parse "$VERSION" >/dev/null 2>&1; then
+          echo "❌ Error: Tag $VERSION already exists!"
+          echo "Please increment the version in Chart.yaml before releasing."
+          exit 1
+        else
+          echo "✅ Tag $VERSION does not exist, proceeding with release"
+        fi
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3.4.0
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Package and push Helm chart
+      run: |
+        VERSION="${{ steps.chart_version.outputs.version }}"
+        CHART_NAME="${{ steps.chart_version.outputs.chart_name }}"
+        OCI_URL="${{ env.REGISTRY }}/${{ github.repository_owner }}/charts"
+        
+        # Create charts directory
+        mkdir -p charts
+        
+        # Package the chart
+        helm package ${{ env.CHART_PATH }}/ --destination ./charts/
+        CHART_PACKAGE="charts/${CHART_NAME}-${VERSION}.tgz"
+        
+        echo "Packaged chart: $CHART_PACKAGE"
+        ls -la charts/
+        
+        # Push to OCI registry
+        echo "Pushing to: oci://${OCI_URL}"
+        helm push "$CHART_PACKAGE" "oci://${OCI_URL}"
+        
+        echo " Chart pushed successfully!"
+        echo "=� Chart: ${CHART_NAME}:${VERSION}"
+        echo "=� Location: oci://${OCI_URL}/${CHART_NAME}"
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.chart_version.outputs.version }}
+        name: Release ${{ steps.chart_version.outputs.version }}
+        files: charts/*.tgz
+        generate_release_notes: true
+        make_latest: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
