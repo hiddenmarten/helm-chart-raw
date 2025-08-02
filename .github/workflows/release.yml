@@ -10,6 +10,7 @@ env:
 jobs:
   release:
     runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
       packages: write
@@ -69,9 +70,9 @@ jobs:
         echo "Pushing to: oci://${OCI_URL}"
         helm push "$CHART_PACKAGE" "oci://${OCI_URL}"
         
-        echo " Chart pushed successfully!"
-        echo "=� Chart: ${CHART_NAME}:${VERSION}"
-        echo "=� Location: oci://${OCI_URL}/${CHART_NAME}"
+        echo "Chart pushed successfully!"
+        echo "Chart: ${CHART_NAME}:${VERSION}"
+        echo "Location: oci://${OCI_URL}/${CHART_NAME}"
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
