@@ -22,3 +22,22 @@ version: 0.0.1
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "0.0.1"
+
+# Artifact Hub annotations for better visibility and homepage
+annotations:
+  # URL to the chart's home page (this will be shown as the homepage on Artifact Hub)
+  artifacthub.io/links: |
+    - name: Homepage
+      url: https://github.com/your-username/your-repo
+    - name: Documentation  
+      url: https://github.com/your-username/your-repo/blob/main/README.md
+  # Chart category for better discoverability
+  artifacthub.io/category: deployment
+  # Alternative name if needed
+  artifacthub.io/displayName: Raw Template Chart
+  # Keywords for search
+  artifacthub.io/keywords: |
+    - helm
+    - template
+    - raw
+    - deployment

@@ -1,3 +1,4 @@
 {{- range .Values.templates }}
 {{ tpl (. | toYaml) $ }}
+---
 {{- end }}

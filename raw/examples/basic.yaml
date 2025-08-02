@@ -25,7 +25,7 @@ templates:
         app: example
       ports:
         - port: 80
-          targetPort: {{ .Values.servicePort }}
+          targetPort: "{{ .Values.servicePort }}"
 
 # Values that will be referenced in the templates
 environment: development
