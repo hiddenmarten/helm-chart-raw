@@ -75,7 +75,7 @@ jobs:
         echo "Location: oci://${OCI_URL}/${CHART_NAME}"
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v2.3.2
       with:
         tag_name: ${{ steps.chart_version.outputs.version }}
         name: Release ${{ steps.chart_version.outputs.version }}
