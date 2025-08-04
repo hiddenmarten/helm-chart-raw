@@ -1,0 +1,28 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: 'raw/README.md'
+      - id: check-yaml
+        exclude: 'raw/templates/.*'
+      - id: check-added-large-files
+  - repo: https://github.com/norwoodj/helm-docs
+    rev: "v1.14.2"
+    hooks:
+      - id: helm-docs-built
+  - repo: local
+    hooks:
+      - id: helm-schema
+        name: helm-schema
+        entry: sh -c 'helm schema'
+        language: system
+        require_serial: true
+      - id: helm-lint
+        name: helm-lint
+        entry: sh -c 'for file in raw/examples/*.yaml; do echo "Linting with $file"; helm lint raw -f "$file"; done'
+        language: system
+        require_serial: true

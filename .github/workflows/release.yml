@@ -55,21 +55,21 @@ jobs:
         VERSION="${{ steps.chart_version.outputs.version }}"
         CHART_NAME="${{ steps.chart_version.outputs.chart_name }}"
         OCI_URL="${{ env.REGISTRY }}/${{ github.repository_owner }}/charts"
-        
+
         # Create charts directory
         mkdir -p charts
-        
+
         # Package the chart
         helm package ${{ env.CHART_PATH }}/ --destination ./charts/
         CHART_PACKAGE="charts/${CHART_NAME}-${VERSION}.tgz"
-        
+
         echo "Packaged chart: $CHART_PACKAGE"
         ls -la charts/
-        
+
         # Push to OCI registry
         echo "Pushing to: oci://${OCI_URL}"
         helm push "$CHART_PACKAGE" "oci://${OCI_URL}"
-        
+
         echo "Chart pushed successfully!"
         echo "Chart: ${CHART_NAME}:${VERSION}"
         echo "Location: oci://${OCI_URL}/${CHART_NAME}"
