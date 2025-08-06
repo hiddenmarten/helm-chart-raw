@@ -1,4 +1,4 @@
-templates:
+resources:
   # A ConfigMap example
   - apiVersion: v1
     kind: ConfigMap

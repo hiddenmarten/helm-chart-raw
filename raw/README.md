@@ -1,4 +1,4 @@
-![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
 
 A flexible Helm chart that allows you to define and render any Kubernetes resources directly in your values.yaml file.
 
@@ -34,4 +34,4 @@ This project is licensed under the terms specified in the LICENSE file.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| templates | list | `[]` |  |
+| resources | list | `[]` |  |

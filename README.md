@@ -2,6 +2,13 @@
 
 A flexible Helm chart that allows you to define and render any Kubernetes resources directly in your values.yaml file.
 
+## Purpose
+
+This chart has been created to be a workaround for this Terraform issue:
+  - https://github.com/hashicorp/terraform-provider-kubernetes/issues/1775
+
+Although, I assume there are plenty of other cases where it could be suitable.
+
 ## Contribution guide
 
 Thank you for considering contributing to the Helm Chart Raw project! This guide will help you get started with the development process.
