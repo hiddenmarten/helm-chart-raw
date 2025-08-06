@@ -23,6 +23,6 @@ repos:
         require_serial: true
       - id: helm-lint
         name: helm-lint
-        entry: sh -c 'for file in raw/examples/*.yaml; do echo "Linting with $file"; helm lint raw -f "$file"; done'
+        entry: sh -c 'for file in raw/examples/*.yaml; do helm lint raw -f "$file"; done'
         language: system
         require_serial: true
